@@ -57,19 +57,21 @@ open class EdnWriter(val printWriter: PrintWriter) {
         printWriter.println("$prefix{:el :$type")
         printWriter.println("$prefix :id :$id")
 
+        // rel attributes
+        if(this is Rel) {
+            printWriter.println("$prefix :from :${from!!.id}")
+            printWriter.println("$prefix :to :${to!!.id}")
+        }
+
         // optional attributes
         subtype?.let { printWriter.println("$prefix :subtype :$it") }
         name?.let { printWriter.println("$prefix :name \"$it\"") }
         desc?.let { printWriter.println("$prefix :desc \"$it\"") }
         tech?.let { printWriter.println("$prefix :tech \"$it\"") }
 
+        // node attribute
         if (this is Node) {
             external?.let { printWriter.println("$prefix :external $it") }
-        }
-
-        if(this is Rel) {
-            printWriter.println("$prefix :from :${from!!.id}")
-            printWriter.println("$prefix :to :${to!!.id}")
         }
 
         printWriter.println("$prefix}")
