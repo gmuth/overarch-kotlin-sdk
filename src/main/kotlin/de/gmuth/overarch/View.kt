@@ -12,7 +12,7 @@ open class View(
     fun writeEdn(file: File) {
         val printWriter = PrintWriter(file.outputStream(), true)
         println("generate file ${file.name}")
-        printWriter.println("; file ${file.path}")
+        printWriter.println("; file ${file.unixPath()}")
         writeEdn(printWriter)
     }
 

@@ -59,8 +59,8 @@ open class Element(
 
         fun writeModel(file: File, elements: Collection<Element>) {
             val printWriter = PrintWriter(file.outputStream(), true)
-            println("generate file ${file.name}")
-            printWriter.println("; file ${file.path}")
+            println("generate file ${file.absolutePath}")
+            printWriter.println("; file ${file.unixPath()}")
             writeModel(printWriter, elements)
         }
 
