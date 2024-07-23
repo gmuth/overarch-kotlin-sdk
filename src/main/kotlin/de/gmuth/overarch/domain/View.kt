@@ -25,7 +25,7 @@ open class View(
         append("}")
     }.toString()
 
-    private fun Direction.toEdn() = ":direction :$name"
+    private fun Direction.toEdn() = ":direction :${name.lowercase()}"
 
     fun writeEdn(printerWriter: PrintWriter) = printerWriter.run {
         //println("; generated at ${LocalDateTime.now()}")
