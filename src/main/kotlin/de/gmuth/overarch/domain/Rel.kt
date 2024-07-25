@@ -1,5 +1,7 @@
 package de.gmuth.overarch.domain
 
+import de.gmuth.overarch.domain.Direction.*
+
 open class Rel(
     id: Id,
     type: Type = Type.REL,
@@ -23,8 +25,9 @@ open class Rel(
             to?.let { add(it) }
         }
 
-    fun up() = this.apply { direction = Direction.UP }
-    fun down() = this.apply { direction = Direction.DOWN }
-    fun left() = this.apply { direction = Direction.LEFT }
-    fun right() = this.apply { direction = Direction.RIGHT }
+    fun direction(new: Direction) = this.apply { direction = new }
+    fun up() = direction(UP)
+    fun down() = direction(DOWN)
+    fun left() = direction(LEFT)
+    fun right() = direction(RIGHT)
 }
