@@ -58,7 +58,7 @@ open class EdnWriter(val printWriter: PrintWriter) {
         printWriter.println("$prefix :id :$id")
 
         // rel attributes
-        if(this is Rel) {
+        if (this is Rel) {
             printWriter.println("$prefix :from :${from!!.id}")
             printWriter.println("$prefix :to :${to!!.id}")
         }
@@ -75,6 +75,16 @@ open class EdnWriter(val printWriter: PrintWriter) {
         }
 
         printWriter.println("$prefix}")
+    }
+
+    // --- write edn refs only ---
+
+    fun writeElementRefs(model: Model) = writeElementRefs(model.elements)
+
+    fun writeElementRefs(elements: Iterable<Element>, prefix: String = "") = printWriter.run {
+        for (element in elements) with(element) {
+            println("$prefix{:ref :$id}")
+        }
     }
 
     companion object {
