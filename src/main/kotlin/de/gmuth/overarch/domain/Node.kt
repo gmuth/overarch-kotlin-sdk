@@ -17,6 +17,9 @@ open class Node(
     subtype = subtype
 ) {
 
+    var publishDirection: Direction? = null
+    var subscribeDirection: Direction? = null
+
     val relations: MutableSet<Rel> = mutableSetOf()
 
     private fun buildRelId(idAction: String, target: Node, includeTargetNameInId: Boolean = true) = Id(
@@ -64,8 +67,10 @@ open class Node(
 
     fun publish(queue: Queue) =
         rel(buildRelId("publishes", queue), queue, "publishes", type = Type.PUBLISH)
+            .apply { direction = publishDirection }
 
     fun subscribe(queue: Queue) =
         rel(buildRelId("subscribes", queue), queue, "subscribes", type = Type.SUBSCRIBE)
+            .apply { direction = subscribeDirection }
 
 }
