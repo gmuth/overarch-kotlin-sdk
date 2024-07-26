@@ -17,13 +17,14 @@ open class Node(
     subtype = subtype
 ) {
 
-    val ownedQueues: Set<Queue>
-        get() = Queue.findOwnedBy(this).toSet()
+    fun getOwnedQueues() = Queue.getOwnedBy(this)
+
+    fun getRelsTo(target: Node) = rels.filter { it.to == target }
 
     var publishDirection: Direction? = null
     var subscribeDirection: Direction? = null
 
-    val relations: MutableSet<Rel> = mutableSetOf()
+    val rels: MutableSet<Rel> = mutableSetOf()
 
     private fun buildRelId(idAction: String, target: Node, includeTargetNameInId: Boolean = true) = Id(
         "${this.id.name}-${idAction.lowercase()}${if (includeTargetNameInId) "-${target.id.name}" else ""}",
@@ -46,8 +47,8 @@ open class Node(
         desc = desc,
         tech = tech
     ).also {
-        relations.add(it)
-        target?.relations?.add(it)
+        rels.add(it)
+        target?.rels?.add(it)
     }
 
     fun rel(
@@ -76,8 +77,11 @@ open class Node(
         rel(buildRelId("subscribes", queue), queue, "subscribes", type = Type.SUBSCRIBE)
             .apply { direction = subscribeDirection }
 
-    fun subscribe(queues: Collection<Queue>, direction: Direction? = null) =
-        queues.map { subscribe(it).direction(direction) }
+    fun subscribe(queues: Collection<Queue>, direction: Direction? = null) = queues.run {
+        if (isEmpty()) throw IllegalArgumentException("List of queues must not be empty.")
+        map { subscribe(it).direction(direction) }
+    }
+
 
     fun subscribe(vararg queue: Queue, direction: Direction? = null) =
         subscribe(queue.toList(), direction)

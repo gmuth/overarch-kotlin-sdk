@@ -7,9 +7,14 @@ import java.io.PrintWriter
 open class View(
     val id: Id,
     val title: String,
-    val relations: Collection<Rel>,
-    val nodes: MutableCollection<Node> = relations.flatMap { it.nodes }.distinct().toMutableList(),
+    val rels: Collection<Rel>,
+    val nodes: MutableCollection<Node> = rels.flatMap { it.nodes }.distinct().toMutableList(),
 ) {
+    init {
+        println("View[$id] $title: ${rels.size} rels")
+        //rels.forEach { println("- ${it.id}") }
+    }
+
     fun writeEdn(file: File) {
         val printWriter = PrintWriter(file.outputStream(), true)
         println("generate file ${file.name}")
@@ -37,7 +42,7 @@ open class View(
         println("   :title \"$title\"")
         println("   :ct [")
         nodes.distinct().forEach { println("       ${it.ednRef()}") }
-        relations.distinct().forEach { println("       ${it.ednRef()}") }
+        rels.distinct().forEach { println("       ${it.ednRef()}") }
         println("   ]}")
         println("}")
     }

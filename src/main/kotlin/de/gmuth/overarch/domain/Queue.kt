@@ -16,7 +16,14 @@ class Queue(
     external = external,
 ) {
     companion object {
-        val getAllQueues: Collection<Queue> = allElements.filterIsInstance<Queue>()
-        fun findOwnedBy(node: Node) = getAllQueues.filter { it.owner == node }
+        private val allQueues: Collection<Queue>
+            get() = allElements.filterIsInstance<Queue>()
+
+        fun getOwnedBy(node: Node) = allQueues.filter { it.owner == node }
     }
+
+    override fun toString() = StringBuilder("Queue[$id]").run {
+        tech?.let { append(" tech='$tech'") }
+        owner?.let { append(" owner=${owner.id}") }
+    }.toString()
 }

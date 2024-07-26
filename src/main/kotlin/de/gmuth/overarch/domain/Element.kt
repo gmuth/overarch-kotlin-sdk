@@ -23,6 +23,6 @@ open class Element(
 
     init {
         elementMap[id] = this
-        println("$type[$id] ${name ?: ""}")
+        println("| $type[$id] ${name ?: ""}")
     }
 }
