@@ -60,7 +60,7 @@ open class Node(
     ) =
         rel(buildRelId(idAction, target, includeTargetNameInId), target, name, desc)
 
-    fun calls(name: String, desc: String? = null, tech: String? = null, target: Node) =
+    fun calls(name: String = "calls", desc: String? = null, tech: String? = null, target: Node) =
         rel(buildRelId("calls", target), target, name, desc, tech)
 
     fun sends(name: String, desc: String? = null, target: Node) =
@@ -69,9 +69,9 @@ open class Node(
     fun gets(name: String, desc: String? = null, source: Node) =
         rel(buildRelId("gets-$name-from", source), source, "gets $name", desc)
 
-    fun publish(queue: Queue) =
+    fun publish(queue: Queue, queueDirection: Direction? = publishDirection) =
         rel(buildRelId("publishes", queue), queue, "publishes", type = Type.PUBLISH)
-            .apply { direction = publishDirection }
+            .apply { direction = queueDirection }
 
     fun subscribe(queue: Queue) =
         rel(buildRelId("subscribes", queue), queue, "subscribes", type = Type.SUBSCRIBE)
