@@ -41,8 +41,8 @@ open class View(
         println("   :spec  {:layout :top-down :include :related :plantuml {:sprite-libs [:azure :devicons]}}")
         println("   :title \"$title\"")
         println("   :ct [")
-        nodes.distinct().forEach { println("       ${it.ednRef()}") }
-        rels.distinct().forEach { println("       ${it.ednRef()}") }
+        nodes.distinct().sortedBy { it.id }.forEach { println("       ${it.ednRef()}") }
+        rels.distinct().sortedBy { it.id }.forEach { println("       ${it.ednRef()}") }
         println("   ]}")
         println("}")
     }
