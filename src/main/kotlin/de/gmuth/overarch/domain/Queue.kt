@@ -16,11 +16,7 @@ class Queue(
     external = external,
 ) {
     companion object {
-        private val queueMap: MutableMap<Id, Queue> = mutableMapOf()
-        fun findOwnedBy(node: Node) = queueMap.values.filter { it.owner == node }
-    }
-
-    init {
-        queueMap[id] = this
+        val getAllQueues: Collection<Queue> = allElements.filterIsInstance<Queue>()
+        fun findOwnedBy(node: Node) = getAllQueues.filter { it.owner == node }
     }
 }
