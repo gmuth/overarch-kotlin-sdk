@@ -31,7 +31,7 @@ open class Node(
         namespace = this.id.namespace
     )
 
-    fun rel(
+    private fun rel(
         id: Id,
         target: Node? = null,
         name: String? = null,
@@ -81,7 +81,6 @@ open class Node(
         if (isEmpty()) throw IllegalArgumentException("List of queues must not be empty.")
         map { subscribe(it).direction(direction) }
     }
-
 
     fun subscribe(vararg queue: Queue, direction: Direction? = null) =
         subscribe(queue.toList(), direction)
