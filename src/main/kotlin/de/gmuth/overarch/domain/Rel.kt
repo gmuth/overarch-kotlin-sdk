@@ -25,7 +25,7 @@ open class Rel(
             to?.let { add(it) }
         }
 
-    fun direction(new: Direction) = this.apply { direction = new }
+    fun direction(new: Direction?) = this.apply { direction = new }
     fun up() = direction(UP)
     fun down() = direction(DOWN)
     fun left() = direction(LEFT)
