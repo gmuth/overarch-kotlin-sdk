@@ -38,8 +38,14 @@ open class EdnWriter(val printWriter: PrintWriter) {
         println("#{")
         fun writeWithTitle(title: String, elements: Collection<Element>) = elements.run {
             if (isNotEmpty()) {
-                println("; $title");
-                forEach { writeElement(it) }
+                println("; $title")
+                forEach {
+                    try {
+                        writeElement(it)
+                    } catch(throwable: Throwable) {
+                        throw RuntimeException("Failed to write model for element ${it.id}", throwable)
+                    }
+                }
             }
         }
         elements.distinct().sortedBy { it.id }.run {
@@ -52,6 +58,8 @@ open class EdnWriter(val printWriter: PrintWriter) {
     fun writeModel(model: Model) = writeElements(model.elements)
 
     fun writeElement(element: Element, prefix: String = "  ") = element.run {
+
+        requireNotNull(element.name) { "Elements without name can only be used for reference (kotlin or {:ref :<id>})." }
 
         // required attributes
         printWriter.println("$prefix{:el :$type")
