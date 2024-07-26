@@ -17,6 +17,9 @@ open class Node(
     subtype = subtype
 ) {
 
+    val ownedQueues: Set<Queue>
+        get() = Queue.findOwnedBy(this).toSet()
+
     var publishDirection: Direction? = null
     var subscribeDirection: Direction? = null
 
@@ -72,5 +75,11 @@ open class Node(
     fun subscribe(queue: Queue) =
         rel(buildRelId("subscribes", queue), queue, "subscribes", type = Type.SUBSCRIBE)
             .apply { direction = subscribeDirection }
+
+    fun subscribe(queues: Collection<Queue>, direction: Direction? = null) =
+        queues.map { subscribe(it).direction(direction) }
+
+    fun subscribe(vararg queue: Queue, direction: Direction? = null) =
+        subscribe(queue.toList(), direction)
 
 }
