@@ -5,8 +5,7 @@ class Queue(
     name: String? = null,
     desc: String? = null,
     tech: String? = null,
-    external: Boolean? = null,
-    val owner: Node? = null,
+    external: Boolean? = null
 ) : Container(
     id,
     name = name,
@@ -18,12 +17,12 @@ class Queue(
     companion object {
         private val allQueues: Collection<Queue>
             get() = allElements.filterIsInstance<Queue>()
-
-        fun getOwnedBy(node: Node) = allQueues.filter { it.owner == node }
     }
 
-    override fun toString() = StringBuilder("Queue[$id]").run {
-        tech?.let { append(" tech='$tech'") }
-        owner?.let { append(" owner=${owner.id}") }
-    }.toString()
+    fun publisherIsAvailable() = getPublishers().isNotEmpty()
+    fun getPublishers() = getIncomingRels(Type.PUBLISH)
+        .filter { it.from != null }
+        .map { it.from }
+    fun getPublisher() = getPublishers().single()
+
 }

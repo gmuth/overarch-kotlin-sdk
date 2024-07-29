@@ -13,7 +13,7 @@ open class EdnWriter(val printWriter: PrintWriter) {
     constructor(outputStream: OutputStream = System.out) : this(PrintWriter(outputStream, true))
 
     constructor(file: File) : this(file.outputStream()) {
-        println("generate file ${file.absolutePath}")
+        println(">>> generate file ${file.absolutePath}")
         printWriter.println("; file ${file.unixPath()}")
     }
 

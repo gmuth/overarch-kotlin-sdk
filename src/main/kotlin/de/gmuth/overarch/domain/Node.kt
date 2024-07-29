@@ -16,15 +16,21 @@ open class Node(
     tech = tech,
     subtype = subtype
 ) {
+    val rels: MutableSet<Rel> = mutableSetOf()
 
-    fun getOwnedQueues() = Queue.getOwnedBy(this)
-
-    fun getRelsTo(target: Node) = rels.filter { it.to == target }
+    fun getPublishedQueues() = getOutgoingRels(Type.PUBLISH).map { it.to as Queue}
+    fun getSubscribedQueues() = getOutgoingRels(Type.SUBSCRIBE).map { it.to as Queue}
 
     var publishDirection: Direction? = null
     var subscribeDirection: Direction? = null
 
-    val rels: MutableSet<Rel> = mutableSetOf()
+    fun getOutgoingRels(type: Type? = null) = rels
+        .filter { this == it.from}
+        .filter { type == null || it.type == type }
+
+    fun getIncomingRels(type: Type? = null) = rels
+        .filter { it.to == this}
+        .filter { type == null || it.type == type }
 
     private fun buildRelId(idAction: String, target: Node, includeTargetNameInId: Boolean = true) = Id(
         "${this.id.name}-${idAction.lowercase()}${if (includeTargetNameInId) "-${target.id.name}" else ""}",

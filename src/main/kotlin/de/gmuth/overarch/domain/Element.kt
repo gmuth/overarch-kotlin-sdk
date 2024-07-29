@@ -21,8 +21,13 @@ open class Element(
             get() = elementMap.values
     }
 
+    override fun toString(): String = StringBuilder().apply {
+        append(subtype ?: type)
+        append(" $id")
+    }.toString()
+
     init {
         elementMap[id] = this
-        println("| $type[$id] ${name ?: ""}")
+        println("+ $this")
     }
 }

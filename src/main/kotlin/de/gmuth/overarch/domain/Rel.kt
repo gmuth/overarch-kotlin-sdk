@@ -30,6 +30,4 @@ open class Rel(
     fun down() = direction(DOWN)
     fun left() = direction(LEFT)
     fun right() = direction(RIGHT)
-
-    override fun toString() = "$type[$id]"
 }
