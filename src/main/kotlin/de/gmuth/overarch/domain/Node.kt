@@ -18,18 +18,18 @@ open class Node(
 ) {
     val rels: MutableSet<Rel> = mutableSetOf()
 
-    fun getPublishedQueues() = getOutgoingRels(Type.PUBLISH).map { it.to as Queue}
-    fun getSubscribedQueues() = getOutgoingRels(Type.SUBSCRIBE).map { it.to as Queue}
+    fun getPublishedQueues() = getOutgoingRels(Type.PUBLISH).map { it.to as Queue }
+    fun getSubscribedQueues() = getOutgoingRels(Type.SUBSCRIBE).map { it.to as Queue }
 
     var publishDirection: Direction? = null
     var subscribeDirection: Direction? = null
 
     fun getOutgoingRels(type: Type? = null) = rels
-        .filter { this == it.from}
+        .filter { this == it.from }
         .filter { type == null || it.type == type }
 
     fun getIncomingRels(type: Type? = null) = rels
-        .filter { it.to == this}
+        .filter { it.to == this }
         .filter { type == null || it.type == type }
 
     private fun buildRelId(idAction: String, target: Node, includeTargetNameInId: Boolean = true) = Id(
@@ -75,20 +75,32 @@ open class Node(
     fun gets(name: String, desc: String? = null, source: Node) =
         rel(buildRelId("gets-$name-from", source), source, "gets $name", desc)
 
+    // --- publish ---
+
     fun publish(queue: Queue, queueDirection: Direction? = publishDirection) =
         rel(buildRelId("publishes", queue), queue, "publishes", type = Type.PUBLISH)
             .apply { direction = queueDirection }
+
+    fun publish(queues: Collection<Queue>, direction: Direction? = publishDirection) = queues.run {
+        if (isEmpty()) throw IllegalArgumentException("List of queues must not be empty.")
+        map { publish(it).direction(direction) }
+    }
+
+    fun publish(vararg queue: Queue, direction: Direction? = publishDirection) =
+        publish(queue.toList(), direction)
+
+    // --- subscribe ---
 
     fun subscribe(queue: Queue) =
         rel(buildRelId("subscribes", queue), queue, "subscribes", type = Type.SUBSCRIBE)
             .apply { direction = subscribeDirection }
 
-    fun subscribe(queues: Collection<Queue>, direction: Direction? = null) = queues.run {
+    fun subscribe(queues: Collection<Queue>, direction: Direction? = subscribeDirection) = queues.run {
         if (isEmpty()) throw IllegalArgumentException("List of queues must not be empty.")
         map { subscribe(it).direction(direction) }
     }
 
-    fun subscribe(vararg queue: Queue, direction: Direction? = null) =
+    fun subscribe(vararg queue: Queue, direction: Direction? = subscribeDirection) =
         subscribe(queue.toList(), direction)
 
 }
