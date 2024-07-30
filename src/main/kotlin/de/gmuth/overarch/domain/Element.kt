@@ -22,8 +22,9 @@ open class Element(
     }
 
     override fun toString(): String = StringBuilder().apply {
-        append(subtype ?: type)
-        append(" $id")
+        append("$id ")
+        append("(${subtype ?: type})")
+        // other attributes might not have useful context yet
     }.toString()
 
     init {
