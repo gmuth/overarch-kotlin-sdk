@@ -20,9 +20,13 @@ class Queue(
     }
 
     fun publisherIsAvailable() = getPublishers().isNotEmpty()
+
     fun getPublishers() = getIncomingRels(Type.PUBLISH)
         .filter { it.from != null }
         .map { it.from }
-    fun getPublisher() = getPublishers().single()
+
+    fun getPublisher() = getPublishers()
+        .apply { if (size > 1) println("WARNING: $size publishers found, use getPublishers() instead") }
+        .single()
 
 }
