@@ -1,6 +1,7 @@
 package de.gmuth.overarch.export
 
 import de.gmuth.overarch.domain.Element
+import de.gmuth.overarch.domain.Element.Companion.allElements
 import de.gmuth.overarch.domain.Model
 import de.gmuth.overarch.domain.Node
 import de.gmuth.overarch.domain.Rel
@@ -27,11 +28,7 @@ open class EdnWriter(val printWriter: PrintWriter) {
 
     fun writeElementsFilteredByNamespace(namespaceStartsWith: String, loadElements: Collection<Element>) =
         // known issue: elements MUST be loaded/instantiated before
-        writeElements(Element
-            .allElements
-            .filter { it.id.namespace.startsWith(namespaceStartsWith) }
-            .sortedBy { it.id }
-        )
+        writeElements(allElements.filter { it.id.namespace.startsWith(namespaceStartsWith) })
 
     fun writeElements(elements: Iterable<Element>) = printWriter.run {
         println("; DO NOT MODIFY generated content")
@@ -42,7 +39,7 @@ open class EdnWriter(val printWriter: PrintWriter) {
                 forEach {
                     try {
                         writeElement(it)
-                    } catch(throwable: Throwable) {
+                    } catch (throwable: Throwable) {
                         throw RuntimeException("Failed to write model for element ${it.id}", throwable)
                     }
                 }
