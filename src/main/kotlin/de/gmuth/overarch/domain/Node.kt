@@ -32,12 +32,12 @@ open class Node(
         .filter { it.to == this }
         .filter { type == null || it.type == type }
 
-    private fun buildRelId(idAction: String, target: Node, includeTargetNameInId: Boolean = true) = Id(
+    fun buildRelId(idAction: String, target: Node, includeTargetNameInId: Boolean = true) = Id(
         "${this.id.name}-${idAction.lowercase()}${if (includeTargetNameInId) "-${target.id.name}" else ""}",
         namespace = this.id.namespace
     )
 
-    private fun rel(
+    fun rel(
         id: Id,
         target: Node? = null,
         name: String? = null,
