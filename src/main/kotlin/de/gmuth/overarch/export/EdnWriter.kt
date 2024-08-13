@@ -1,13 +1,11 @@
 package de.gmuth.overarch.export
 
-import de.gmuth.overarch.domain.Element
+import de.gmuth.overarch.domain.*
 import de.gmuth.overarch.domain.Element.Companion.allElements
-import de.gmuth.overarch.domain.Model
-import de.gmuth.overarch.domain.Node
-import de.gmuth.overarch.domain.Rel
 import java.io.File
 import java.io.OutputStream
 import java.io.PrintWriter
+import java.lang.System
 
 open class EdnWriter(val printWriter: PrintWriter) {
 
@@ -82,6 +80,44 @@ open class EdnWriter(val printWriter: PrintWriter) {
         printWriter.println("$prefix}")
     }
 
+    // --- write Views ---
+
+    fun writeViews(views: Collection<View>, prefix: String = "  ") = printWriter.run {
+        println("; DO NOT MODIFY generated content")
+        println("#{")
+        views.iterator().run {
+            while (hasNext()) {
+                writeView(next())
+                if (hasNext()) println("$prefix,")
+            }
+        }
+        println("}")
+    }
+
+    fun writeView(view: View, prefix: String = "  ") = printWriter.run {
+        println("$prefix{:el :${view.type.elementType()}")
+        println("$prefix :id :${view.id}")
+        // :include :related
+        println("$prefix :spec  {:layout :top-down :plantuml {:sprite-libs [:azure :devicons]}}")
+        println("$prefix :title \"${view.title}\"")
+        println("$prefix :ct [")
+        println("$prefix     ; nodes")
+        view.nodes.distinct().sortedBy { it.id }.forEach { println("$prefix     ${it.ednRef()}") }
+        println("$prefix     ; rels")
+        view.rels.distinct().sortedBy { it.id }.forEach { println("$prefix     ${it.ednRef()}") }
+        println("$prefix ]}")
+    }
+
+    private fun Element.ednRef() = "{:ref :$id}"
+
+    private fun Rel.ednRef() = StringBuilder().run {
+        append("{:ref :$id")
+        direction?.let { append(" ${it.toEdn()}") }
+        append("}")
+    }.toString()
+
+    private fun Direction.toEdn() = ":direction :${name.lowercase()}"
+
     // --- write edn refs only ---
 
     fun writeElementRefs(model: Model) = writeElementRefs(model.elements)
@@ -94,7 +130,11 @@ open class EdnWriter(val printWriter: PrintWriter) {
 
     companion object {
         var outputDirectory: String = "models"
-        fun writeModel(model: Model, optionalPath: String? = null, filename: String = "model-gen.edn") =
+
+        fun writeModel(optionalPath: String? = null, model: Model, filename: String = "model-gen.edn") =
             EdnWriter(optionalPath, filename).writeModel(model)
+
+        fun writeViews(optionalPath: String? = null, vararg views: View, filename: String = "views-gen.edn") =
+            EdnWriter(optionalPath, filename).writeViews(views.toList())
     }
 }
