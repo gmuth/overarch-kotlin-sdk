@@ -11,4 +11,7 @@ open class System(
     name = name,
     desc = desc,
     external = external
-)
+) {
+    fun sendsTo(desc: String, target: Node) =
+        rel(buildRelId("sends-to", target), target, "sends", desc, tech)
+}
