@@ -7,6 +7,7 @@ open class Element(
     val desc: String? = null,
     val tech: String? = null,
     val subtype: String? = null,
+    val tags: Collection<String> = emptyList()
 ) {
     enum class Type {
         PERSON, COMPONENT, CONTAINER, SYSTEM, REL, PUBLISH, SUBSCRIBE;

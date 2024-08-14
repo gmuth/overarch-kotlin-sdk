@@ -28,15 +28,15 @@ open class EdnWriter(val printWriter: PrintWriter) {
         // known issue: elements MUST be loaded/instantiated before
         writeElements(allElements.filter { it.id.namespace.startsWith(namespaceStartsWith) })
 
-    fun writeElements(elements: Iterable<Element>) = printWriter.run {
+    fun writeElements(elements: Iterable<Element>, prefix: String = "  ") = printWriter.run {
         println("; DO NOT MODIFY generated content")
         println("#{")
         fun writeWithTitle(title: String, elements: Collection<Element>) = elements.run {
             if (isNotEmpty()) {
-                println("; $title")
+                println("$prefix; $title")
                 forEach {
                     try {
-                        writeElement(it)
+                        writeElement(it, prefix)
                     } catch (throwable: Throwable) {
                         throw RuntimeException("Failed to write model for element ${it.id}", throwable)
                     }
@@ -75,6 +75,13 @@ open class EdnWriter(val printWriter: PrintWriter) {
         // node attribute
         if (this is Node) {
             external?.let { printWriter.println("$prefix :external $it") }
+            sprite?.let { printWriter.println("$prefix :sprite \"$it\"") }
+        }
+
+        // tags
+        if (tags.isNotEmpty()) {
+            val tagsString = tags.joinToString(" ", "#{", "}") { "\"$it\"" }
+            printWriter.println("$prefix :tags $tagsString")
         }
 
         printWriter.println("$prefix}")

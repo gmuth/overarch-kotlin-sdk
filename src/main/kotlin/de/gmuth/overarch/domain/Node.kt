@@ -7,14 +7,17 @@ open class Node(
     desc: String? = null,
     tech: String? = null, // not for Persons
     subtype: String? = null, // not for Persons
-    val external: Boolean? = null
+    tags: Collection<String> = emptyList(),
+    val external: Boolean? = null,
+    val sprite: String? = null,
 ) : Element(
     id = id,
     type = type,
     name = name,
     desc = desc,
     tech = tech,
-    subtype = subtype
+    subtype = subtype,
+    tags = tags
 ) {
     val rels: MutableSet<Rel> = mutableSetOf()
 
@@ -61,10 +64,11 @@ open class Node(
         idAction: String,
         name: String,
         desc: String? = null,
+        tech: String? = null,
         target: Node,
         includeTargetNameInId: Boolean = true
     ) =
-        rel(buildRelId(idAction, target, includeTargetNameInId), target, name, desc)
+        rel(buildRelId(idAction, target, includeTargetNameInId), target, name, desc, tech)
 
     fun calls(name: String = "calls", desc: String? = null, tech: String? = null, target: Node) =
         rel(buildRelId("calls", target), target, name, desc, tech)

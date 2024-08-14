@@ -6,7 +6,9 @@ open class Container(
     desc: String? = null,
     tech: String? = null,
     subtype: String? = null,
-    external: Boolean? = null
+    tags: Collection<String> = emptyList(),
+    external: Boolean? = null,
+    sprite: String? = null,
 ) : Node(
     id = id,
     type = Type.CONTAINER,
@@ -14,5 +16,7 @@ open class Container(
     desc = desc,
     tech = tech,
     subtype = subtype,
-    external = external
+    tags = tags,
+    external = external,
+    sprite = sprite,
 )
