@@ -101,15 +101,21 @@ open class EdnWriter(val printWriter: PrintWriter) {
         println("}")
     }
 
-    fun writeView(view: View, prefix: String = "  ") = printWriter.run {
+    fun writeView(view: View, prefix: String = "  ", includeRelated: Boolean = true) = printWriter.run {
         println("$prefix{:el :${view.type.elementType()}")
         println("$prefix :id :${view.id}")
         // :include :related
-        println("$prefix :spec  {:layout :top-down :plantuml {:sprite-libs [:azure :devicons]}}")
+        println("$prefix :spec  {:include :related :layout :top-down :plantuml {:sprite-libs [:azure :devicons]}}")
         println("$prefix :title \"${view.title}\"")
         println("$prefix :ct [")
-        println("$prefix     ; nodes")
-        view.nodes.distinct().sortedBy { it.id }.forEach { println("$prefix     ${it.ednRef()}") }
+        if (view.nodes.isNotEmpty()) {
+            if (includeRelated) {
+                System.out.println("INFO: ${view.nodes.size} nodes not listed, because overarch includes related nodes")
+            } else {
+                println("$prefix     ; nodes")
+                view.nodes.distinct().sortedBy { it.id }.forEach { println("$prefix     ${it.ednRef()}") }
+            }
+        }
         println("$prefix     ; rels")
         view.rels.distinct().sortedBy { it.id }.forEach { println("$prefix     ${it.ednRef()}") }
         println("$prefix ]}")
