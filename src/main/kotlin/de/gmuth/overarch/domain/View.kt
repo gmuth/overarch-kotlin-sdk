@@ -17,9 +17,8 @@ open class View(
     val elements: MutableCollection<Element> = mutableListOf()
 
     init {
-        println("* $id (${type.elementType()}) ${elements.size} elements")
-        //rels.forEach { println("- ${it.id}") }
         elements.addAll(initialElements)
+        println("* $id (${type.elementType()}) ${elements.size} elements")
     }
 
     fun add(vararg element: Element) =
