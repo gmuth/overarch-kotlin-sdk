@@ -1,6 +1,6 @@
 package de.gmuth.overarch.domain
 
-class Queue(
+open class Queue(
     id: Id,
     name: String? = null,
     desc: String? = null,
