@@ -71,10 +71,10 @@ open class Node(
         rel(buildRelId(idAction, target, includeTargetNameInId), target, name, desc, tech)
 
     fun calls(name: String = "calls", desc: String? = null, tech: String? = null, target: Node) =
-        rel(buildRelId("calls", target), target, name, desc, tech)
+        rel(buildRelId("calls", target), target, name, desc, tech, Type.REQUEST)
 
     fun sends(name: String, desc: String? = null, target: Node) =
-        rel(buildRelId("sends-$name-to", target), target, "sends $name", desc)
+        rel(buildRelId("sends-$name-to", target), target, "sends $name", desc, type = Type.SEND)
 
     fun gets(name: String, desc: String? = null, source: Node) =
         rel(buildRelId("gets-$name-from", source), source, "gets $name", desc)

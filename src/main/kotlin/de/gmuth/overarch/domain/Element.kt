@@ -10,8 +10,8 @@ open class Element(
     val tags: Collection<String> = emptyList()
 ) {
     enum class Type {
-        PERSON, COMPONENT, CONTAINER, SYSTEM,
-        REL, PUBLISH, SUBSCRIBE, CONTEXT_BOUNDARY;
+        PERSON, COMPONENT, CONTAINER, SYSTEM, CONTEXT_BOUNDARY,
+        REL, PUBLISH, SUBSCRIBE, SEND, REQUEST;
 
         override fun toString() = name
             .lowercase()

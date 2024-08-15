@@ -13,5 +13,5 @@ open class System(
     external = external
 ) {
     fun sendsTo(desc: String, target: Node) =
-        rel(buildRelId("sends-to", target), target, "sends", desc, tech)
+        rel(buildRelId("sends-to", target), target, "sends", desc, tech, Type.SEND)
 }
