@@ -10,9 +10,12 @@ open class Element(
     val tags: Collection<String> = emptyList()
 ) {
     enum class Type {
-        PERSON, COMPONENT, CONTAINER, SYSTEM, REL, PUBLISH, SUBSCRIBE;
+        PERSON, COMPONENT, CONTAINER, SYSTEM,
+        REL, PUBLISH, SUBSCRIBE, CONTEXT_BOUNDARY;
 
-        override fun toString() = name.lowercase()
+        override fun toString() = name
+            .lowercase()
+            .replace("_", "-")
     }
 
     companion object {
@@ -25,7 +28,7 @@ open class Element(
     override fun toString(): String = StringBuilder().apply {
         append("$id ")
         append("(${subtype ?: type})")
-        // other attributes might not have useful context yet
+        // other attributes might not have useful content yet
     }.toString()
 
     init {

@@ -107,4 +107,9 @@ open class Node(
     fun subscribe(vararg queue: Queue, direction: Direction? = subscribeDirection) =
         subscribe(queue.toList(), direction)
 
+    companion object {
+        fun relsOf(vararg node: Node): Collection<Rel> =
+            node.flatMap { it.rels }
+    }
+
 }

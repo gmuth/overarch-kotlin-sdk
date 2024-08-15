@@ -108,18 +108,16 @@ open class EdnWriter(val printWriter: PrintWriter) {
         println("$prefix :spec  {:include :related :layout :${view.layout} :plantuml {:sprite-libs [:azure :devicons]}}")
         println("$prefix :title \"${view.title}\"")
         println("$prefix :ct [")
-        if (view.nodes.isNotEmpty()) {
-            if (includeRelated) {
-                System.out.println("INFO: ${view.nodes.size} nodes not listed, because overarch includes related nodes")
-            } else {
-                println("$prefix     ; nodes")
-                view.nodes.distinct().sortedBy { it.id }.forEach { println("$prefix     ${it.ednRef()}") }
-            }
-        }
-        println("$prefix     ; rels")
-        view.rels.distinct().sortedBy { it.id }.forEach { println("$prefix     ${it.ednRef()}") }
+        view.elements.distinct().sortedBy { it.id }.forEach { println("$prefix     ${toEdnRef(it)}") }
         println("$prefix ]}")
     }
+
+    private fun toEdnRef(element: Element) =
+        if(element is Rel) {
+            element.ednRef()
+        } else {
+            element.ednRef()
+        }
 
     private fun Element.ednRef() = "{:ref :$id}"
 

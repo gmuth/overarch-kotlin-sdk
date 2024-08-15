@@ -5,8 +5,7 @@ open class View(
     val id: Id,
     val title: String,
     val layout: String = "top-down",
-    val rels: Collection<Rel>,
-    val nodes: MutableCollection<Node> = rels.flatMap { it.nodes }.distinct().toMutableList(),
+    initialElements: Collection<Element>
 ) {
     enum class Type {
         Container, Context;
@@ -15,9 +14,18 @@ open class View(
         fun elementType() = "${name.lowercase()}-view"
     }
 
+    val elements: MutableCollection<Element> = mutableListOf()
+
     init {
-        println("* $id (${type.elementType()}) ${rels.size} rels")
+        println("* $id (${type.elementType()}) ${elements.size} elements")
         //rels.forEach { println("- ${it.id}") }
+        elements.addAll(initialElements)
     }
+
+    fun add(vararg element: Element) =
+        addAll(element.toList())
+
+    fun addAll(moreElements: Collection<Element>) =
+        elements.addAll(moreElements)
 
 }
