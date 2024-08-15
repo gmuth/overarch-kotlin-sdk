@@ -105,7 +105,7 @@ open class EdnWriter(val printWriter: PrintWriter) {
         println("$prefix{:el :${view.type.elementType()}")
         println("$prefix :id :${view.id}")
         // :include :related
-        println("$prefix :spec  {:include :related :layout :top-down :plantuml {:sprite-libs [:azure :devicons]}}")
+        println("$prefix :spec  {:include :related :layout :${view.layout} :plantuml {:sprite-libs [:azure :devicons]}}")
         println("$prefix :title \"${view.title}\"")
         println("$prefix :ct [")
         if (view.nodes.isNotEmpty()) {
