@@ -28,6 +28,8 @@ open class EdnWriter(val printWriter: PrintWriter) {
         // known issue: elements MUST be loaded/instantiated before
         writeElements(allElements.filter { it.id.namespace.startsWith(namespaceStartsWith) })
 
+    fun writeElements(vararg element: Element) = writeElements(element.toList())
+
     fun writeElements(elements: Iterable<Element>, prefix: String = "  ") = printWriter.run {
         println("; DO NOT MODIFY generated content")
         println("#{")
@@ -46,6 +48,8 @@ open class EdnWriter(val printWriter: PrintWriter) {
         elements.distinct().sortedBy { it.id }.run {
             writeWithTitle("nodes", filterIsInstance<Node>())
             writeWithTitle("rels", filterIsInstance<Rel>())
+            filterNot { it is Node || it is Rel }
+                .forEach { System.out.println("WARN: ignored unsupported element '${it.id}'") }
         }
         println("}")
     }
@@ -84,6 +88,15 @@ open class EdnWriter(val printWriter: PrintWriter) {
             printWriter.println("$prefix :tags $tagsString")
         }
 
+        // boundry attributes
+        if (this is ContextBoundary) {
+            printWriter.println("$prefix :ct #{")
+            elements.forEach {
+                printWriter.println("$prefix       ${it.ednRef()}")
+            }
+            printWriter.println("$prefix }")
+        }
+
         printWriter.println("$prefix}")
     }
 
@@ -113,7 +126,7 @@ open class EdnWriter(val printWriter: PrintWriter) {
     }
 
     private fun toEdnRef(element: Element) =
-        if(element is Rel) {
+        if (element is Rel) {
             element.ednRef()
         } else {
             element.ednRef()
@@ -121,6 +134,9 @@ open class EdnWriter(val printWriter: PrintWriter) {
 
     private fun Element.ednRef() = "{:ref :$id}"
 
+    // Known issue:
+    // Directions are currently shared among views.
+    // In order to support different directions per view, we should create some kind of "Ref-Copy"
     private fun Rel.ednRef() = StringBuilder().run {
         append("{:ref :$id")
         direction?.let { append(" ${it.toEdn()}") }
